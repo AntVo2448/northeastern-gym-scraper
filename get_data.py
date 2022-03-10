@@ -119,6 +119,15 @@ sql_marino_3rd_cardio  = f"INSERT INTO \"Marino Center - 3rd Floor Select & Card
 sql_marino_track       = f"INSERT INTO \"Marino Center - Track\" VALUES ({results[4][3]}, {results[4][2]}, '{results[4][1]}')"
 sql_squashbusters_4th  = f"INSERT INTO \"SquashBusters - 4th Floor\" VALUES ({results[5][3]}, {results[5][2]}, '{results[5][1]}')"
 
+sql_queries = [
+  sql_marino_2nd_floor, 
+  sql_marino_gymnasium, 
+  sql_marino_3rd_weights, 
+  sql_marino_3rd_cardio, 
+  sql_marino_track, 
+  sql_squashbusters_4th
+]
+
 # Attempt to insert these queries
 try:
     # Get secrets from Heroku environment variables
@@ -145,20 +154,24 @@ try:
     # print(connection.get_dsn_parameters(), "\n")
 
     # Execute Queries
-    cursor.execute(sql_marino_2nd_floor)
-    cursor.execute(sql_marino_gymnasium)
-    cursor.execute(sql_marino_3rd_weights)
-    cursor.execute(sql_marino_3rd_cardio)
-    cursor.execute(sql_marino_track)
-    cursor.execute(sql_squashbusters_4th)
+    for query in sql_queries:
+      try:
+        cursor.execute(query)
+        print(cursor.query)
+      except (Exception, Error) as error:
+          print('\n')
+          print("Query Error:\n", error)
 
 except (Exception, Error) as error:
-    print("Error while connecting to PostgreSQL", error)
+    print('\n')
+    print("Connection Error:\n", error)
+    pass
 finally:
     if (connection):
         cursor.close()
         connection.close()
-        print("PostgreSQL connection is closed")
+        print('\n')
+        print("PostgreSQL connection is closed.")
 
 
 # NOTES:
